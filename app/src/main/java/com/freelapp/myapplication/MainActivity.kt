@@ -30,9 +30,22 @@ class MainActivity : AppCompatActivity() {
 //            }
 //        })
 
-        usersViewModel.usersLiveData.observe(this, Observer {
-            it.onSuccess { data -> Log.d(TAG, data.toString()) }
-                .onFailure { data, error -> Log.d(TAG, "${error?.toString()}") }
+        usersViewModel.usersLiveData.observe(this, Observer { resource ->
+            resource.onSuccess { users ->
+                usersLoaded(users)
+            }.onFailure { lastValidUsers, error -> {
+                usersLoadingFailed(lastValidUsers, error)
+            }
         })
     }
+    
+    private fun usersLoaded(users : HashMap<String, User>) {
+        Log.d(TAG, users.toString()) 
+    }
+                                             
+    private fun usersLoadingFailed(lastValidUsers : HashMap<String, User>, error: String) {
+        Log.d(TAG, "${error?.toString()}") 
+    }
+                                             
+
 }
